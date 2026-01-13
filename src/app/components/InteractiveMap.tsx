@@ -44,7 +44,7 @@ export function InteractiveMap({ drivers, onDriverClick }: InteractiveMapProps) 
 
   // 2. 스크립트 로드 로직 (ncpClientId로 수정)
   useEffect(() => {
-    const clientId = import.meta.env.VITE_NAVER_MAP_CLIENT_ID;
+    const clientId = import.meta.env.VITE_NAVER_MAP_CLIENT_ID || "1kh591ouem";
     
     if (window.naver && window.naver.maps) {
       setIsMapLoaded(true);
