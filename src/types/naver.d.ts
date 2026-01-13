@@ -126,6 +126,9 @@ declare namespace naver {
       static removeListener(instance: any, eventName: string, handler: Function): void;
       static trigger(instance: any, eventName: string, ...args: any[]): void;
     }
+
+    // 네이버 지도 API v3에서는 Event (대문자)도 사용 가능
+    const Event: typeof event;
   }
 }
 
