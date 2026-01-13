@@ -26,14 +26,16 @@ export function Sidebar({
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
       <div className="p-6">
         <div className="flex items-center mb-8">
-          <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-            <LayoutDashboard className="w-6 h-6 text-white" />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="S-CORT Logo" 
+            className="h-10 w-auto object-contain"
+          />
           <div className="ml-3">
             <h2 className="font-semibold text-gray-900">
-              안전운전
+              S-CORT
             </h2>
-            <p className="text-xs text-gray-500">모니터링</p>
+            <p className="text-xs text-gray-500">위험운전 모니터링</p>
           </div>
         </div>
 
