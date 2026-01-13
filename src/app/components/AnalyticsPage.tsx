@@ -6,18 +6,26 @@ import { TrendingUp } from "lucide-react";
 
 interface AnalyticsPageProps {
   drivers: Driver[];
+  onViewDetails?: (driver: Driver) => void;
 }
 
-const topDrivers: TopDriver[] = [
-  { rank: 1, id: "DRV-101", name: "강태양", score: 98, safetyDays: 145, totalTrips: 320, noViolations: 320 },
-  { rank: 2, id: "DRV-087", name: "오민지", score: 96, safetyDays: 132, totalTrips: 298, noViolations: 298 },
-  { rank: 3, id: "DRV-065", name: "임준호", score: 94, safetyDays: 118, totalTrips: 275, noViolations: 273 },
-  { rank: 4, id: "DRV-143", name: "윤서아", score: 92, safetyDays: 106, totalTrips: 256, noViolations: 254 },
-  { rank: 5, id: "DRV-092", name: "신동현", score: 90, safetyDays: 95, totalTrips: 241, noViolations: 239 },
-];
-
-export function AnalyticsPage({ drivers }: AnalyticsPageProps) {
+export function AnalyticsPage({ drivers, onViewDetails }: AnalyticsPageProps) {
   const [activeTab, setActiveTab] = useState<"data" | "topDrivers">("data");
+
+  // 실제 운전자 데이터에서 우수 운전자 TOP 5 생성
+  const topDrivers: TopDriver[] = drivers
+    .filter(d => d.status === "정상" && d.averageScore) // 정상 운전자 중에서
+    .sort((a, b) => (b.averageScore || 0) - (a.averageScore || 0)) // 점수 높은 순으로 정렬
+    .slice(0, 5) // 상위 5명
+    .map((driver, index) => ({
+      rank: index + 1,
+      id: driver.id,
+      name: driver.name,
+      score: driver.averageScore || 0,
+      safetyDays: Math.floor((driver.monthlyDrivingMinutes || 0) / 60 / 24), // 월간 운행 시간을 일수로 변환
+      totalTrips: Math.floor((driver.monthlyDrivingMinutes || 0) / 60), // 월간 운행 시간을 횟수로 변환
+      noViolations: Math.floor((driver.monthlyDrivingMinutes || 0) / 60) - Math.floor((driver.riskLevel || 0) / 10), // 위반 없음 횟수
+    }));
 
   return (
     <div className="space-y-6">
@@ -50,7 +58,7 @@ export function AnalyticsPage({ drivers }: AnalyticsPageProps) {
 
       {/* 탭 컨텐츠 */}
       {activeTab === "data" && <DataAnalysis drivers={drivers} />}
-      {activeTab === "topDrivers" && <TopDrivers drivers={topDrivers} />}
+      {activeTab === "topDrivers" && <TopDrivers drivers={topDrivers} allDrivers={drivers} onViewDetails={onViewDetails} />}
     </div>
   );
 }

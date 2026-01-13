@@ -58,7 +58,7 @@ function App() {
       case "alerts":
         return <AlertManagement drivers={mockDrivers} onViewDetails={handleViewDetails} />;
       case "analytics":
-        return <AnalyticsPage drivers={mockDrivers} />;
+        return <AnalyticsPage drivers={mockDrivers} onViewDetails={handleViewDetails} />;
       default:
         return <Dashboard drivers={mockDrivers} onViewDetails={handleViewDetails} />;
     }

@@ -10,11 +10,15 @@ export interface TopDriver {
   noViolations: number;
 }
 
+import { Driver } from "./DriverTable";
+
 interface TopDriversProps {
   drivers: TopDriver[];
+  allDrivers?: Driver[];
+  onViewDetails?: (driver: Driver) => void;
 }
 
-export function TopDrivers({ drivers }: TopDriversProps) {
+export function TopDrivers({ drivers, allDrivers, onViewDetails }: TopDriversProps) {
   const getRankIcon = (rank: number) => {
     switch (rank) {
       case 1: return <Trophy className="w-6 h-6 text-yellow-500" />;
@@ -45,11 +49,23 @@ export function TopDrivers({ drivers }: TopDriversProps) {
 
       <div className="p-6">
         <div className="space-y-4">
-          {drivers.map((driver) => (
+          {drivers.map((driver) => {
+            // 실제 Driver 데이터 찾기
+            const actualDriver = allDrivers?.find(d => d.id === driver.id);
+            const isClickable = actualDriver && onViewDetails;
+            
+            return (
             <div
               key={driver.id}
-              className={`relative rounded-lg border-2 p-4 transition-all hover:shadow-lg ${
+              onClick={() => {
+                if (isClickable) {
+                  onViewDetails(actualDriver);
+                }
+              }}
+              className={`relative rounded-lg border-2 p-4 transition-all ${
                 driver.rank <= 3 ? "border-yellow-300 bg-yellow-50" : "border-gray-200"
+              } ${
+                isClickable ? "cursor-pointer hover:shadow-lg hover:scale-[1.02]" : ""
               }`}
             >
               <div className="flex items-center">
@@ -99,7 +115,8 @@ export function TopDrivers({ drivers }: TopDriversProps) {
                 )}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* 추가 정보 */}
